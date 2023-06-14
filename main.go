@@ -275,26 +275,25 @@ func main() {
 			fmt.Println("Usage: ./pg_cli select [db_name] [table_name]")
 			os.Exit(1)
 		}
-		execCommand(fmt.Sprintf("kubectl exec -i -n %s %s -- psql -U %s -c \"SELETE * FROM %s.%s\"", namespace, podName, dbUser, args[0]), []byte{})
-
+		execCommand(fmt.Sprintf("kubectl exec -i -n %s %s -- psql -U %s -c \"SELECT * FROM %s.%s\"", namespace, podName, dbUser, args[0], args[1]), []byte{})
 	case "insert":
 		if len(args) < 3 {
 			fmt.Println("Usage: ./pg_cli insert [db_name] [table_name] [values]")
 			os.Exit(1)
 		}
-	        execCommand(fmt.Sprintf("kubectl exec -i -n %s %s -- psql -U %s -c \"INSERT INTO %s.%s VALUES %s\"", namespace, podName, dbUser, args[0]), []byte{})
+		execCommand(fmt.Sprintf("kubectl exec -i -n %s %s -- psql -U %s -c \"INSERT INTO %s.%s VALUES %s\"", namespace, podName, dbUser, args[0], args[1], args[2]), []byte{})
 	case "update":
 		if len(args) < 4 {
 			fmt.Println("Usage: ./pg_cli update [db_name] [table_name] [set_clause] [condition]")
 			os.Exit(1)
 		}
-		execCommand(fmt.Sprintf("kubectl exec -i -n %s %s -- psql -U %s -c \"UPDATE %s.%s SET %s WHERE %s\"", namespace, podName, dbUser, args[0]), []byte{})
+		execCommand(fmt.Sprintf("kubectl exec -i -n %s %s -- psql -U %s -c \"UPDATE %s.%s SET %s WHERE %s\"", namespace, podName, dbUser, args[0], args[1], args[2], args[3]), []byte{})
 	case "delete":
 		if len(args) < 3 {
 			fmt.Println("Usage: ./pg_cli delete [db_name] [table_name] [condition]")
 			os.Exit(1)
 		}
-		execCommand(fmt.Sprintf("kubectl exec -i -n %s %s -- psql -U %s -c \"DELETE FROM  %s.%s WHERE %s\"", namespace, podName, dbUser, args[0]), []byte{})
+		execCommand(fmt.Sprintf("kubectl exec -i -n %s %s -- psql -U %s -c \"DELETE FROM %s.%s WHERE %s\"", namespace, podName, dbUser, args[0], args[1], args[2]), []byte{})
 	default:
 		fmt.Println("Command not found.")
 		os.Exit(1)
