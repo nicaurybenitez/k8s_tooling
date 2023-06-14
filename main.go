@@ -245,7 +245,7 @@ func main() {
 
 	switch command {
 	case "databases":
-		execCommand(fmt.Sprintf("kubectl exec -i -n %s %s -- psql -U %s -c \"\\l\"", namespace, podName, dbUser, args[0]), []byte{})
+		execCommand(fmt.Sprintf("kubectl exec -i -n %s %s -- psql -U %s -c \"\\l\"", namespace, podName, dbUser), []byte{})
 	case "create_db":
 		if len(args) < 1 {
 			fmt.Println("Usage: ./pg_cli create_db [db_name]")
