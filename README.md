@@ -9,7 +9,9 @@ This command line script allows you to execute SQL commands on a Kubernetes clus
 Make sure you have Go installed on your system and properly configured. Additionally, you will need access to a Kubernetes cluster that contains a PostgreSQL container and the `kubectl` and `psql` command line tools.
 
 ### Usage
-
+Please Generate a encryption Key 
+pg_cli generate_key
+pg_cli config 
 Run the script as follows:
 
 ```
