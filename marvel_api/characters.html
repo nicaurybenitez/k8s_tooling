@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Marvel API - Characters</title>
+</head>
+<body>
+    <h1>Marvel Characters</h1>
+    <ul>
+        {% for character in characters %}
+            <li>{{ character['name'] }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
+

@@ -1,0 +1,11 @@
+version: '3'
+services:
+  marvel_server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 5000:5000
+    environment:
+      - MARVEL_API_KEY=PUT_YOUR_API
+
