@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"bytes"
 	"os/exec"
 	"strings"
 	"encoding/base64"
@@ -17,13 +18,14 @@ import (
 
 const (
 	envFile         = ".env"
-	encryptedEnvKey = "your-encryption-key" // Cambia esto con tu propia clave de cifrado
+	encryptedEnvKey = "theBig-encryption-key" // Add the key
 )
 
-func execCommand(command string) {
+func execCommand(command string, input []byte) {
 	cmd := exec.Command("bash", "-c", command)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
+	cmd.Stdin = bytes.NewReader(input)
 	err := cmd.Run()
 	if err != nil {
 		fmt.Println("Error executing command:", err)
@@ -243,55 +245,56 @@ func main() {
 
 	switch command {
 	case "databases":
-		execCommand(fmt.Sprintf("kubectl exec -it -n %s %s -- psql -U %s -c \"\\l\"", namespace, podName, dbUser))
+		execCommand(fmt.Sprintf("kubectl exec -i -n %s %s -- psql -U %s -c \"\\l\"", namespace, podName, dbUser, args[0]), []byte{})
 	case "create_db":
 		if len(args) < 1 {
 			fmt.Println("Usage: ./pg_cli create_db [db_name]")
 			os.Exit(1)
 		}
-		execCommand(fmt.Sprintf("kubectl exec -it -n %s %s -- psql -U %s -c \"CREATE DATABASE %s\"", namespace, podName, dbUser, args[0]))
+		execCommand(fmt.Sprintf("kubectl exec -i -n %s %s -- psql -U %s -c \"CREATE DATABASE %s\"", namespace, podName, dbUser, args[0]), []byte{})
 	case "drop_db":
 		if len(args) < 1 {
 			fmt.Println("Usage: ./pg_cli drop_db [db_name]")
 			os.Exit(1)
 		}
-		execCommand(fmt.Sprintf("kubectl exec -it -n %s %s -- psql -U %s -c \"DROP DATABASE %s\"", namespace, podName, dbUser, args[0]))
+		execCommand(fmt.Sprintf("kubectl exec -i -n %s %s -- psql -U %s -c \"DROP DATABASE %s\"", namespace, podName, dbUser, args[0]), []byte{})
 	case "tables":
 		if len(args) < 1 {
 			fmt.Println("Usage: ./pg_cli tables [db_name]")
 			os.Exit(1)
 		}
-		execCommand(fmt.Sprintf("kubectl exec -it -n %s %s -- psql -U %s -c \"\\dt %s.*\"", namespace, podName, dbUser, args[0]))
+		execCommand(fmt.Sprintf("kubectl exec -i -n %s %s -- psql -U %s -c \"\\dt %s.*\"", namespace, podName, dbUser, args[0]), []byte{})
 	case "table_info":
 		if len(args) < 2 {
 			fmt.Println("Usage: ./pg_cli table_info [db_name] [table_name]")
 			os.Exit(1)
 		}
-		execCommand(fmt.Sprintf("kubectl exec -it -n %s %s -- psql -U %s -c \"\\d %s.%s\"", namespace, podName, dbUser, args[0], args[1]))
+		execCommand(fmt.Sprintf("kubectl exec -i -n %s %s -- psql -U %s -c \"\\d %s.%s\"", namespace, podName, dbUser, args[0]), []byte{})
 	case "select":
 		if len(args) < 2 {
 			fmt.Println("Usage: ./pg_cli select [db_name] [table_name]")
 			os.Exit(1)
 		}
-		execCommand(fmt.Sprintf("kubectl exec -it -n %s %s -- psql -U %s -c \"SELECT * FROM %s.%s\"", namespace, podName, dbUser, args[0], args[1]))
+		execCommand(fmt.Sprintf("kubectl exec -i -n %s %s -- psql -U %s -c \"SELETE * FROM %s.%s\"", namespace, podName, dbUser, args[0]), []byte{})
+
 	case "insert":
 		if len(args) < 3 {
 			fmt.Println("Usage: ./pg_cli insert [db_name] [table_name] [values]")
 			os.Exit(1)
 		}
-		execCommand(fmt.Sprintf("kubectl exec -it -n %s %s -- psql -U %s -c \"INSERT INTO %s.%s VALUES %s\"", namespace, podName, dbUser, args[0], args[1], args[2]))
+	        execCommand(fmt.Sprintf("kubectl exec -i -n %s %s -- psql -U %s -c \"INSERT INTO %s.%s VALUES %s\"", namespace, podName, dbUser, args[0]), []byte{})
 	case "update":
 		if len(args) < 4 {
 			fmt.Println("Usage: ./pg_cli update [db_name] [table_name] [set_clause] [condition]")
 			os.Exit(1)
 		}
-		execCommand(fmt.Sprintf("kubectl exec -it -n %s %s -- psql -U %s -c \"UPDATE %s.%s SET %s WHERE %s\"", namespace, podName, dbUser, args[0], args[1], args[2], args[3]))
+		execCommand(fmt.Sprintf("kubectl exec -i -n %s %s -- psql -U %s -c \"UPDATE %s.%s SET %s WHERE %s\"", namespace, podName, dbUser, args[0]), []byte{})
 	case "delete":
 		if len(args) < 3 {
 			fmt.Println("Usage: ./pg_cli delete [db_name] [table_name] [condition]")
 			os.Exit(1)
 		}
-		execCommand(fmt.Sprintf("kubectl exec -it -n %s %s -- psql -U %s -c \"DELETE FROM %s.%s WHERE %s\"", namespace, podName, dbUser, args[0], args[1], args[2]))
+		execCommand(fmt.Sprintf("kubectl exec -i -n %s %s -- psql -U %s -c \"DELETE FROM  %s.%s WHERE %s\"", namespace, podName, dbUser, args[0]), []byte{})
 	default:
 		fmt.Println("Command not found.")
 		os.Exit(1)
