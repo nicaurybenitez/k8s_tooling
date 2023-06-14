@@ -15,7 +15,7 @@ This is a basic HTTP server that consumes the Marvel API and displays the result
 1. Clone this repository to your local machine:
 
    ```bash
-   git clone <REPOSITORY_URL>
+   git clone [<REPOSITORY_URL>](https://github.com/nicaurybenitez/k8s_tooling.git)
    ```
 
 2. Navigate to the project directory:
